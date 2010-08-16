@@ -1,0 +1,292 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Misc::Stopwatch</title>
+<link rel="stylesheet" href="styles.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#exports">EXPORTS</a></li>
+	<li><a href="#dependencies">DEPENDENCIES</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#public_interface">PUBLIC INTERFACE</a></li>
+	<ul>
+
+		<li><a href="#new">new</a></li>
+		<li><a href="#start">start</a></li>
+		<li><a href="#lap">lap</a></li>
+		<li><a href="#stop">stop</a></li>
+		<li><a href="#elapsed">elapsed</a></li>
+		<li><a href="#reset">reset</a></li>
+		<li><a href="#is_running">is_running</a></li>
+	</ul>
+
+	<li><a href="#package_internals">PACKAGE INTERNALS</a></li>
+	<ul>
+
+		<li><a href="#_capture">_capture</a></li>
+	</ul>
+
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Misc::Stopwatch - Measure elapsed time</p>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  #!/usr/bin/perl
+  use Misc::Stopwatch;
+  my $sw = Misc::Stopwatch-&gt;new()-&gt;start();
+  for (1 .. 3) {
+    sleep 1;
+    $sw-&gt;lap();
+  }
+  $sw-&gt;stop();
+  printf &quot;Lap 1: %f\n&quot;, $sw-&gt;elapsed(1);
+  printf &quot;Lap 2: %f\n&quot;, $sw-&gt;elapsed(2);
+  printf &quot;Lap 3: %f\n&quot;, $sw-&gt;elapsed(3);
+  printf &quot;Total: %f\n&quot;, $sw-&gt;elapsed();</pre>
+<p>Will output something like:</p>
+<pre>
+  Lap 1: 1.000244
+  Lap 2: 2.000375
+  Lap 3: 3.000527
+  Total: 3.000544</pre>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="exports">EXPORTS</a></h1>
+<p>Nothing exported by default</p>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="dependencies">DEPENDENCIES</a></h1>
+<p>This module requires these other modules and libraries:</p>
+<pre>
+    Time::HiRes</pre>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This module provides convenient methods as expected from a stopwatch.</p>
+<pre>
+  start       Starts the stopwatch
+  lap         Marks a lap time
+  stop        Stops it
+  elapsed     Returns the elapsed time
+  reset       Stops if running and clears all laps
+  is_running  True or False</pre>
+<p>Similar modules:</p>
+<p><code>Time::Stopwatch</code> - provides a tied interface and will work without 
+<code>Time::HiRes</code>.</p>
+<p><code>Benchmark::Stopwatch</code> - is mostly identical, however does not have the 
+<code>elapsed</code> method.</p>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="public_interface">PUBLIC INTERFACE</a></h1>
+<p>
+</p>
+<h2><a name="new">new</a></h2>
+<dl>
+<dt><strong><a name="construct_a_new_misc_stopwatch" class="item">Construct a new Misc::Stopwatch</a></strong></dt>
+
+<dd>
+<pre>
+  new</pre>
+<p>This example will <strong>not</strong> abort:</p>
+<pre>
+  use Misc::Stopwatch;</pre>
+<p>This example will return true:</p>
+<pre>
+  my $sw = Misc::Stopwatch-&gt;new();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="start">start</a></h2>
+<dl>
+<dt><strong><a name="reset_and_start_the_stopwatch" class="item">Reset and Start the stopwatch</a></strong></dt>
+
+<dd>
+<pre>
+  start</pre>
+<p>Returns <code>$self</code>.</p>
+<p>Note that calling this on an already-running instance will reset it.</p>
+<p>This example will <strong>not</strong> abort:</p>
+<pre>
+  my $sw = Misc::Stopwatch-&gt;new()-&gt;start();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="lap">lap</a></h2>
+<dl>
+<dt><strong><a name="preserve_the_elapsed_time_without_stopping" class="item">Preserve the elapsed time without stopping</a></strong></dt>
+
+<dd>
+<pre>
+  lap</pre>
+<p>Returns <code>$self</code>.</p>
+<p>This is is a no-op unless the stopwatch is running.</p>
+<p>This example will <strong>not</strong> abort:</p>
+<pre>
+  my $sw = Misc::Stopwatch-&gt;new()-&gt;start()-&gt;lap();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="stop">stop</a></h2>
+<dl>
+<dt><strong><a name="stop" class="item">Stop</a></strong></dt>
+
+<dd>
+<pre>
+  stop</pre>
+<p>Returns <code>$self</code>.</p>
+<p>This example will <strong>not</strong> abort:</p>
+<pre>
+  my $sw = Misc::Stopwatch-&gt;new()-&gt;start()-&gt;stop();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="elapsed">elapsed</a></h2>
+<dl>
+<dt><strong><a name="return_the_elapsed_time" class="item">Return the elapsed time</a></strong></dt>
+
+<dd>
+<pre>
+  elapsed $lap
+  elapsed</pre>
+<p>In its second form, elapsed will return the time from <a href="#start">start</a> to now (or when
+<a href="#stop">stop</a> was called).</p>
+<p><code>undefined</code> is returned when:</p>
+<p>1.) <code>$lap</code> is provided but no such lap exists</p>
+<p>2.) <a href="#is_running">is_running</a> returns a false value</p>
+<p>This example will return true:</p>
+<pre>
+  Misc::Stopwatch-&gt;new()-&gt;start()-&gt;elapsed();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="reset">reset</a></h2>
+<dl>
+<dt><strong><a name="stop_and_clear_data" class="item">Stop and clear data</a></strong></dt>
+
+<dd>
+<pre>
+  reset</pre>
+<p>Returns <code>$self</code>.</p>
+<p>This example will <strong>not</strong> abort:</p>
+<pre>
+  my $sw = Misc::Stopwatch-&gt;new()-&gt;reset();</pre>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="is_running">is_running</a></h2>
+<dl>
+<dt><strong><a name="boolean_logic" class="item">Boolean logic</a></strong></dt>
+
+<dd>
+<pre>
+  is_running</pre>
+<p>Returns a true value if the stopwatch has been started and has not been 
+stopped.</p>
+<p>This example will return false:</p>
+<pre>
+  Misc::Stopwatch-&gt;new()-&gt;is_running();</pre>
+<p>This example will return true:</p>
+<pre>
+  Misc::Stopwatch-&gt;new()-&gt;start()-&gt;is_running();</pre>
+</dd>
+</dl>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="package_internals">PACKAGE INTERNALS</a></h1>
+<p>
+</p>
+<h2><a name="_capture">_capture</a></h2>
+<dl>
+<dt><strong><a name="capture_the_moment" class="item">Capture the moment</a></strong></dt>
+
+<dd>
+<pre>
+  _capture</pre>
+</dd>
+</dl>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Ryan Gies &lt;<a href="mailto:ryangies@cpan.org">ryangies@cpan.org</a>&gt;</p>
+<p>
+<a href="#__index__"><small>Top</small></a>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2006-2010 by Livesite Networks, LLC. All rights reserved.</p>
+<p>Copyright (C) 2000-2005 by Ryan Gies. All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:</p>
+<p>* Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer.</p>
+<p>* The origin of this software must not be misrepresented; you must not 
+claim that you wrote the original software. If you use this software in a 
+product, an acknowledgment in the product documentation would be 
+appreciated but is not required.</p>
+<p>* Altered source versions must be plainly marked as such, and must not be 
+misrepresented as being the original software.</p>
+<p>* The name of the author may not be used to endorse or promote products 
+derived from this software without specific prior written permission.</p>
+<p>THIS SOFTWARE IS PROVIDED BY THE AUTHOR &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.</p>
+<p>To the best of our knowledge, no patented algorithms have been used. However, we
+do not have the resources to carry out a patent search, and therefore cannot 
+give any guarantee of the above statement.</p>
+<p><a href="#__index__"><small>Top</small></a></p>
+
+</body>
+
+</html>
